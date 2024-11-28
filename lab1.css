@@ -28,9 +28,12 @@ header, footer {
 
 #content1 {
     grid-column: 3;
-    grid-row: 2;
+    grid-row: 2/6;
     background-color: #E6B0AA;
     padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #content2 {
@@ -43,10 +46,11 @@ header, footer {
     justify-content: center;
 }
 
+
 #article {
-    grid-column: 1 / span 3;
-    grid-row: 3;
-    background-color: #7FB3D5;
+    grid-column: 1 / span 2;
+    grid-row: 1.5;
+    background-color: #a1042b;
     padding: 15px;
 }
 
