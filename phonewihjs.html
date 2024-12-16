@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flower Delivery (phone version)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+        }
+
+        header, footer {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 15px 10px;
+        }
+
+        nav {
+            background-color: #333;
+            padding: 10px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav li {
+            margin: 0 10px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .block {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        #content2 img {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .zebra-list li:nth-child(odd) {
+            background-color: #f2f2f2;
+        }
+
+        .zebra-list li:nth-child(even) {
+            background-color: #ffffff;
+        }
+
+        .italic {
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Flower Delivery</h1>
+</header>
+
+<nav id="menu">
+    <ul>
+        <li><a href="home.html">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="aboutus.html">About Us</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="index.2.html">Page without Flex and Grid</a></li>
+        <li><a href="index.1.html">Page with Flex</a></li>
+    </ul>
+</nav>
+
+<div class="container">
+    <div id="content2" class="block">
+        <img src="R.jpg" alt="Hydrangea Flower">
+    </div>
+
+    <div id="content1" class="block">
+        <h2>About Hydrangeas</h2>
+        <p>Hydrangeas originate from Asia and the Americas, where they grow as shrubs, small trees, or climbing plants.</p>
+    </div>
+
+    <div id="article" class="block">
+        <h2>Flower Assortment</h2>
+        <p>Explore our wide range of flowers and bouquets!</p>
+    </div>
+
+    <div id="numberedListBlock" class="block">
+        <h2>Numbered List</h2>
+        <ol id="numberedList" class="zebra-list"></ol>
+        <button id="addItemButton">Add Item</button>
+        <button id="saveListButton">Save List</button>
+    </div>
+
+    <footer>
+        <h3>Contact us:</h3>
+        <p>lullaby@gmail.com | +380984562341 | Kyiv, Ukraine</p>
+    </footer>
+</div>
+
+
+<script>
+
+        // 1. Обмін текстами між блоками
+        document.addEventListener('DOMContentLoaded', function () {
+            let block1 = document.querySelector('header h1');
+            let block6 = document.querySelector('footer h3');
+
+            if (block1 && block6) {
+                [block1.textContent, block6.textContent] = [block6.textContent, block1.textContent];
+            }
+
+            // 3. Перевірка cookies
+            const cookieName = 'triangleResult';
+            const cookieValue = getCookie(cookieName);
+            if (cookieValue) {
+                const confirmDelete = confirm(`Знайдено cookie: ${cookieValue}. Бажаєте видалити?`);
+                if (confirmDelete) {
+                    document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+                    location.reload(); // Оновлюємо сторінку
+                } else {
+                    alert('Cookies залишаються. Перезавантажте сторінку для оновлення.');
+                }
+            }
+
+            // 4. Встановлення курсиву
+            const content2 = document.getElementById('content1');
+            const italicCheckbox = document.createElement('input');
+            italicCheckbox.type = 'checkbox';
+            italicCheckbox.id = 'italicCheckbox';
+            italicCheckbox.checked = localStorage.getItem('italic') === 'true';
+            italicCheckbox.addEventListener('change', function () {
+                content2.classList.toggle('italic', italicCheckbox.checked);
+                localStorage.setItem('italic', italicCheckbox.checked);
+            });
+            content2.appendChild(italicCheckbox);
+            content2.appendChild(document.createTextNode(' Italic text'));
+
+            if (italicCheckbox.checked) {
+                content2.classList.add('italic');
+            }
+
+            // 5. Нумерований список
+            const numberedList = document.getElementById('numberedList');
+            const addItemButton = document.getElementById('addItemButton');
+            const saveListButton = document.getElementById('saveListButton');
+
+            addItemButton.addEventListener('click', function () {
+                const itemText = prompt('Введіть текст для нового пункту:');
+                if (itemText) {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = itemText;
+                    numberedList.appendChild(listItem);
+                    updateZebraList();
+                }
+            });
+
+            saveListButton.addEventListener('click', function () {
+                const items = Array.from(numberedList.children).map(li => li.textContent);
+                localStorage.setItem('numberedList', JSON.stringify(items));
+            });
+
+            function updateZebraList() {
+                const items = numberedList.children;
+                for (let i = 0; i < items.length; i++) {
+                    items[i].style.color = i % 2 === 0 ? 'black' : 'white';
+                    items[i].style.backgroundColor = i % 2 === 0 ? 'white' : 'black';
+                }
+            }
+
+            // Завантаження списку з localStorage
+            const savedList = JSON.parse(localStorage.getItem('numberedList'));
+            if (savedList) {
+                savedList.forEach(itemText => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = itemText;
+                    numberedList.appendChild(listItem);
+                });
+                updateZebraList();
+            }
+        });
+
+        // 2. Площа ромба
+        function calculateRhombusArea(diagonal1, diagonal2) {
+            let area = (diagonal1 * diagonal2) / 2;
+            let block = document.querySelector('#article p');
+            block.innerHTML += `<br><strong>Розрахована площа ромба: ${area}</strong>`;
+        }
+        calculateRhombusArea(10, 15);
+
+        // 3. Робота з cookies
+        function isTriangle(a, b, c) {
+            return a + b > c && a + c > b && b + c > a ? 'Трикутник можливий' : 'Трикутник неможливий';
+        }
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        document.cookie = `${cookieName}=${isTriangle(3, 4, 5)}; path=/`;
+</script>
